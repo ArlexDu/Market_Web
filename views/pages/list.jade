@@ -1,0 +1,30 @@
+extends ../layout
+block content
+	.container
+		.row
+			table.table.table-hover.table-striped
+				thead
+					tr
+						th 商品编号
+						th 商品名称
+						//th 价格
+						//th 修改日期
+						th 销售总量
+						th 查看
+						th 修改
+						th 删除
+				tbody
+					-each item in goods
+						tr(class="item-id-#{item.id}")
+							td #{item.id}
+							td #{item.name}
+							//td #{item.price}
+							//td #{item.time}
+							td #{item.number}
+							td: a(href="/detail/#{item.number}").text-center 查看
+							td: a(href="/update/#{item.number}").text-center 更新
+							td
+								button.btn.btn-danger.del(type="button",data-id="#{item.number}") 删除
+									
+			
+

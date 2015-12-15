@@ -1,0 +1,39 @@
+extends ../layout
+block content
+	.container
+		.row
+			.col-md-6
+				img.img-responsive.center-block(src="#{good.pic}")
+			.col-md-6
+				dl.dl-horizontal
+					dt 商品编号:
+					dd #{good.id}
+					dt 商品名称:
+					dd #{good.name}
+					dt 商品类别:
+					dd #{good.class}
+					dt 产地:
+					dd #{good.place}
+					dt 能量:
+					dd #{good.energy}
+					dt 价格:
+					dd #{good.price}
+					dt 更新时间:
+					dd #{good.time}
+					dt 销售总量:
+					dd #{good.number}
+		.row
+			table.table.table-hover.table-condensed
+				thead
+					tr
+						th 销售时间
+						th 销售价格
+						th 销售数量
+				tbody
+					each item in detail
+						tr
+							th #{item.time}
+							th #{item.price}
+							th #{item.number}
+
+
