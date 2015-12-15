@@ -23,8 +23,9 @@ app.get('/',function(request,reponse){
 //商品总的列表
 app.get('/list',function(request,reponse){
     var data = new DataBase();
-	data.selectFromWhole(function(list){
-         var goods = list;
+    var query =  "SELECT id,name,numbers,price,updatetime " +
+              "FROM wholeinfo ";
+	data.selectFromWhole(query,5,function(goods){
 	     reponse.render('list',{
 		 title: '商品列表',
 		 goods
