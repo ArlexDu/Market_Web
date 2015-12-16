@@ -23,7 +23,7 @@ app.get('/',function(request,reponse){
 //商品总的列表
 app.get('/list',function(request,reponse){
     var data = new DataBase();
-    var query =  "SELECT id,name,numbers,price,updatetime " +
+    var query = "SELECT numbers,price,updatetime,id,name " +
               "FROM wholeinfo ";
 	data.selectFromWhole(query,5,function(goods){
 	     reponse.render('list',{
@@ -40,57 +40,62 @@ app.get('/add',function(request,reponse){
 		good: {
 				id: '',
 				name: '',
-				place: '',
+				productplace: '',
 				energy: '',
 				price: '',
 				time: '',
 				pic: '',
-				class:''
+				style:''
 			}
 	})
 })
 
 //更新商品信息
 app.get('/update/:id',function(request,reponse){
-	reponse.render('add',{
-		title: '添加新的商品',
-		good: {
-				id: '1000000000',
-				name: '牛奶',
-				place: '呼伦贝尔',
-				energy: '100',
-				price: '23.50',
-				time: '',
-				pic: '/image/1.jpg',
-				class:'食品'
-			}
-	})
+	var id = request.params.id;
+//	console.log("id is "+id);
+	var data = new DataBase();
+    var query = "SELECT numbers,price,updatetime,id,name,style,productplace,energy " +
+              "FROM wholeinfo where id = '"+id+"'";
+	data.selectFromWhole(query,8,function(goods){ 
+		 var good = goods[0];
+	     reponse.render('add',{
+		 title: '更新商品的信息',
+		 good
+		 });
+	});
 })
 
+//删除商品
+app.delete('/list',function(request,reponse){
+	var id = request.query.id;
+// 	console.log("receive id is "+id);
+	var data = new DataBase();
+	var sdelete="delete from wholeinfo where id = '"+id+"'";
+	data.deleteinfo(sdelete,function(){
+		  reponse.json({success:1});
+	});
+})
 //查看具体销售信息
 app.get('/detail/:id',function(request,reponse){
-	reponse.render('detail',{
-		title: '商品的详细信息',
-		good: {
-				id: '1000000000',
-				name: '牛奶',
-				class: '食品',
-				place: '呼伦贝尔',
-				energy: '100',
-				price: '23.50',
-				time: '2015/12/12',
-				pic: '/image/1.jpg',
-				number: '200'
-			},
-		detail: [{
-				time: '2015/1/1',
-				price: '20',
-				number: '2'
-				},{
-				time: '2015/2/1',
-				price: '25',
-				number: '9'
-				}]
-	})
+	var id = request.params.id;
+//	console.log("id is "+id);
+	var data = new DataBase();
+    var query = "SELECT numbers,price,updatetime,id,name,style,productplace,energy " +
+              "FROM wholeinfo where id = '"+id+"'";
+	data.selectFromWhole(query,8,function(goods){ 
+		 var good = goods[0];
+		 var query = "SELECT numbers,price,saletime " +
+              "FROM detailinfo where id = '"+id+"'";
+		 data.selectFromWhole(query,3,function(details){ 
+              //	 good.setpic((id+".jpg"));
+	//	 console.log("place is "+good.productplace+" updatetime is "+good.updatetime+" style is "+good.style+" pic is "+good.pic);
+	     reponse.render('detail',{
+		 title: '商品的详细信息',
+		 good,
+		 details
+		 });
+	});
+	});
 })
 

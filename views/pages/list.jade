@@ -21,10 +21,12 @@ block content
 							td #{item.price}
 							td #{item.updatetime}
 							td #{item.number}
-							td: a(href="/detail/#{item.number}").text-center 查看
-							td: a(href="/update/#{item.number}").text-center 更新
+							td: a(href="/detail/#{item.id}").text-center 查看
+							td: a(href="/update/#{item.id}").text-center 更新
 							td
-								button.btn.btn-danger.del(type="button",data-id="#{item.number}") 删除
+								button.btn.btn-danger.del(type="button",data-id="#{item.id}") 删除
+	script(src="/lib/js/jadecontrol.js")
+	
 									
 			
 

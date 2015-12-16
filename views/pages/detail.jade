@@ -11,15 +11,15 @@ block content
 					dt 商品名称:
 					dd #{good.name}
 					dt 商品类别:
-					dd #{good.class}
+					dd #{good.style}
 					dt 产地:
-					dd #{good.place}
+					dd #{good.productplace}
 					dt 能量:
 					dd #{good.energy}
 					dt 价格:
 					dd #{good.price}
 					dt 更新时间:
-					dd #{good.time}
+					dd #{good.updatetime}
 					dt 销售总量:
 					dd #{good.number}
 		.row
@@ -30,9 +30,9 @@ block content
 						th 销售价格
 						th 销售数量
 				tbody
-					each item in detail
+					each item in details
 						tr
-							th #{item.time}
+							th #{item.updatetime}
 							th #{item.price}
 							th #{item.number}
 

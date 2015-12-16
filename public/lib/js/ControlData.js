@@ -65,7 +65,7 @@ DataBase.prototype.selectFromWhole=function(query,num,callback){
               for(var i=0;i<result.rows.length;i++){
                       var exec="new Good(";
                         for(var j=0;j<num;j++){
-                          if(j == 4){
+                          if(j == 2){
                              exec = exec+"getLocalTime(result.rows["+i+"]["+j+"]),";
                           }else{
                              exec = exec+"result.rows["+i+"]["+j+"],";
@@ -80,6 +80,36 @@ DataBase.prototype.selectFromWhole=function(query,num,callback){
               doRelease(connection);
               callback(list);
             }); 
+        });
+}
+
+DataBase.prototype.deleteinfo=function(sdelete,callback){
+      oracledb.getConnection(
+        {
+          user          : dbConfig.user,
+          password      : dbConfig.password,
+          connectString : dbConfig.connectString
+        },
+        function(err, connection)
+        {
+          if (err) {
+            console.error(err.message);
+            return;
+          }
+          connection.execute(
+           sdelete,
+            [],{autoCommit:true},
+            function(err, result)
+            {
+              if (err) {
+                console.error(err.message);
+                doRelease(connection);
+                return;
+              }
+              console.log(result.rowsAffected);
+              doRelease(connection);
+              callback();
+            });
         });
 }
 function doRelease(connection)

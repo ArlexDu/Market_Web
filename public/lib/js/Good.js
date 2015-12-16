@@ -1,4 +1,4 @@
-var Good = function(id,name,number,price,updatetime,style,productplace,energy){
+var Good = function(number,price,updatetime,id,name,style,productplace,energy){
 	this.id = id;
 	this.name=name;
 	this.number=number;
@@ -7,6 +7,7 @@ var Good = function(id,name,number,price,updatetime,style,productplace,energy){
 	this.style = style;
 	this.productplace = productplace;
 	this.energy = energy;
+	this.pic = "/image/"+id+".jpg";
 }
 
 module.exports=Good;
