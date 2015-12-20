@@ -2,55 +2,55 @@ extends ../layout
 block content
 	.container
 		.row
-			form.from-horizontal(method="post",action="/add")
+			form.from-horizontal(method="post",action="#{action}",enctype="multipart/form-data")
 				.form-group
 					.row
 						.col-sm-12
 							img.img-responsive.center-block(src="/image/1000000000.jpg")
 					.row.parent-vertical-center
 						label.col-sm-6.text-right(for="inputfile") 添加照片
-						input#inputfile.col-sm-6(type="file")
+						input#inputfile.col-sm-6(type="file",name="pic")
 				.form-group
 					label.col-sm-3.col-sm-offset-1.text-center.cotrol-label(for="inputid") 输入商品编号
 					.col-sm-8
 						.row
 							.col-sm-9
-								input#inputid.form-control(type="text",name="good[id]",value="#{good.id}")
+								input#inputid.form-control(type="text",name="id",value="#{good.id}")
 							.col-sm-3
 				.form-group
 					label.col-sm-3.col-sm-offset-1.text-center.cotrol-label(for="inputname") 输入商品名称
 					.col-sm-8
 						.row
 							.col-sm-9
-								input#inputname.form-control(type="text",name="good[name]",value="#{good.name}")
+								input#inputname.form-control(type="text",name="name",value="#{good.name}")
 							.col-sm-3
 				.form-group
 					label.col-sm-3.col-sm-offset-1.text-center.cotrol-label(for="inputclass") 输入商品类别
 					.col-sm-8
 						.row
 							.col-sm-9
-								input#inputclass.form-control(type="text",name="good[style]",value="#{good.style}")
+								input#inputclass.form-control(type="text",name="style",value="#{good.style}")
 							.col-sm-3
 				.form-group
 					label.col-sm-3.col-sm-offset-1.text-center.cotrol-label(for="inputplace") 输入生产场地
 					.col-sm-8
 						.row
 							.col-sm-9
-								input#inputplace.form-control(type="text",name="good[productplace]",value="#{good.productplace}")
+								input#inputplace.form-control(type="text",name="productplace",value="#{good.productplace}")
 							.col-sm-3
 				.form-group
 					label.col-sm-3.col-sm-offset-1.text-center.cotrol-label(for="inputprice") 输入价格
 					.col-sm-8
 						.row
 							.col-sm-9
-								input#inputprice.form-control(type="text",name="good[price]",value="#{good.price}")
+								input#inputprice.form-control(type="text",name="price",value="#{good.price}")
 							.col-sm-3
 				.form-group
 					label.col-sm-3.col-sm-offset-1.text-center.cotrol-label(for="inputenergy") 输入营养价值
 					.col-sm-8
 						.row
 							.col-sm-9
-								input#inputenergy.form-control(type="text",name="good[energy]",value="#{good.energy}")
+								input#inputenergy.form-control(type="text",name="energy",value="#{good.energy}")
 							.col-sm-3
 				.form-group
 					.col-sm-12

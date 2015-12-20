@@ -1,0 +1,32 @@
+{
+  "name": "NFCMarket",
+  "description": "super market management system",
+  "main": "",
+  "moduleType": [
+    "amd",
+    "es6",
+    "globals",
+    "node",
+    "yui"
+  ],
+  "keywords": [
+    "NFC"
+  ],
+  "authors": [
+    "Happy"
+  ],
+  "license": "MIT",
+  "homepage": "",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests",
+    "public/libs"
+  ],
+  "dependencies": {
+    "bootstrap": "~3.3.6"
+  }
+}

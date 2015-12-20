@@ -1,0 +1,13 @@
+.border{
+	border:2px solid;
+}
+.parent-vertical-center{
+	line-height: 40px
+}
+.vertical-center{
+	display: table-cell;
+	vertical-align: middle; 
+}
+.showimage{
+	line-height: 700px;
+}

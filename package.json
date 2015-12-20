@@ -1,0 +1,33 @@
+{
+  "name": "nfcmarket",
+  "version": "1.0.0",
+  "description": "super market management system",
+  "main": "app.js",
+  "dependencies": {
+    "express": "^4.13.3",
+    "jade": "^1.11.0",
+    "oracledb": "^1.4.0"
+  },
+  "devDependencies": {
+    "formidable": "^1.0.17",
+    "grunt-contrib-watch": "^0.6.1",
+    "grunt-nodemon": "^0.4.1"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Happyfine/NFCMarket_Web.git"
+  },
+  "keywords": [
+    "NFC",
+    "WEB"
+  ],
+  "author": "Happy",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Happyfine/NFCMarket_Web/issues"
+  },
+  "homepage": "https://github.com/Happyfine/NFCMarket_Web#readme"
+}
