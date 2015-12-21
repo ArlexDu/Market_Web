@@ -149,6 +149,12 @@ module.exports = function(app){
 			});
 		})
 
+		app.post('/uploadPic',function(request,response){
+			uploadFile(request,function(){
+				
+			});
+		})
+
 		//Android端获取产品信息
 		app.post('/android/updateinfo',function(request,response){
             var updatetime = request.body.updatetime;
@@ -162,6 +168,50 @@ module.exports = function(app){
 			})
 
 		})
+
+		//Android来更新商品的出售信息
+		app.post('/android/loadupdetail',function(request,response){
+			var info = request.body.info;
+			var data = new DataBase();
+			// var info = "[{'id':'1000000000','time':'1231435135','number':'20','price':'23.5'},"+
+			//           "{'id':'1000000001','time':'1231435135','number':'20','price':'23.5'}]"
+            var newinfo = eval(info)
+			var sinsert = "insert all "
+			for(var i=0;i<newinfo.length;i++){
+				var id = newinfo[i].id
+				var time = newinfo[i].time
+                var number = newinfo[i].number
+                var price = newinfo[i].price
+                var sinsert=sinsert+"into detailinfo (id,price,saletime,numbers)"+
+			           " values ('"+id+"','"+price+"','"+time+
+			           "','"+number+"') "
+			}
+			sinsert = sinsert+" select 1 from dual"
+			console.log("exec is "+sinsert);
+		    data.Changeinfo(sinsert,true,function(){
+                    console.json({success:5});
+			 });
+ 		// 	console.log(request.body.info);
+		})
+
+		//Android端添加产品信息
+		app.post('/android/add',function(request,response){
+			var id = request.body.id;
+			var name = request.body.name;
+			var style = request.body.style;
+			var productplace = request.body.productplace;
+			var price = request.body.price;
+			var energy = request.body.energy;
+			var updatetime = Date.parse(new Date())/1000;
+			var data = new DataBase();
+			var sinsert="insert into wholeinfo (id,name,style,productplace,"+
+			           "price,energy,numbers,updatetime) values ('"+id+"','"+name+"','"+style+
+			           "','"+productplace+"','"+price+"','"+energy+"',"+0+",'"+updatetime+"')"
+			  // console.log("add exec is "+ sinsert);
+		      data.Changeinfo(sinsert,true,function(){
+		                      response.json({success:1});
+			});
+		})
 }
 
 //把时间戳改为正常的格式
@@ -169,7 +219,7 @@ function getLocalTime(nS) {
        return new Date(parseInt(nS) * 1000).toLocaleString().substr(0,16).replace(/年|月/g, "/").replace(/日/g, " ");      
     } 
 
-function uploadFile(id,req,callback){
+function uploadFile(req,callback){
 	var fs = require('fs');
     var formidable = require("formidable");
     var form = new formidable.IncomingForm();
@@ -179,13 +229,13 @@ function uploadFile(id,req,callback){
             var file = files[key];
             switch (file.type){
                 case "image/jpeg":
-                    fName = id + ".jpg";
+                    fName = "temp.jpg";
                     break;
                 case "image/png":
-                    fName = id + ".png";
+                    fName = "temp.png";
                     break;
                 default :
-                    fName = id + ".png";
+                    fName = "temp.png";
                     break;
             }
             console.log(file.size);
