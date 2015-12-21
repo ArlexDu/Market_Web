@@ -10,14 +10,11 @@ $(document).ready(function (e) {
             cache:false,
             contentType: false,
             processData: false,
-            success:function(data){
-                console.log("success");
-                console.log(data);
-            },
-            error: function(data){
-                console.log("error");
-                console.log(data);
-            }
+        }).done(function(results){
+        	if(results.success===1){
+				console.log("success");
+				$('#pic').attr('src',results.path)
+			}
         });
     }));
 

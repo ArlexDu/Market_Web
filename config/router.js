@@ -1,7 +1,9 @@
 //设置路由分发
 var DataBase=require('../public/libs/js/ControlData.js') 
 var fs = require('fs')
+var gm = require('gm')
 var path = require('path')
+
 //首页
 module.exports = function(app){
 		app.get('/',function(request,reponse){
@@ -52,13 +54,15 @@ module.exports = function(app){
 			var data = new DataBase();
 		    var query = "SELECT numbers,price,updatetime,id,name,style,productplace,energy " +
 		              "FROM wholeinfo where id = '"+id+"'";
+		    var picaction="/uploadPic"
 		    var action ="/update"
 			data.selectFromWhole(query,8,function(goods){ 
 				 var good = goods[0];
 			     reponse.render('add',{
 				 title: '更新商品的信息',
 				 good,
-		         action
+		         action,
+		         picaction
 				 });
 			});
 		})
@@ -109,25 +113,24 @@ module.exports = function(app){
 			var productplace = request.body.productplace;
 			var price = request.body.price;
 			var energy = request.body.energy;
-			uploadFile(id,request,function(){
-				var updatetime = Date.parse(new Date())/1000;
-				var data = new DataBase();
-				// console.log("update");
-				var query = "SELECT numbers " +
+			var updatetime = Date.parse(new Date())/1000;
+			var data = new DataBase();
+			// console.log("update");
+			var query = "SELECT numbers " +
 			              "FROM wholeinfo where id = '"+id+"'";
-				data.selectFromWhole(query,1,function(goods){ 
-			         var number = goods[0].numbers;
+				data.selectFromWhole(query,1,function(number){ 
+			         // console.log("number is "+number);
 			         var sdelete="delete from wholeinfo where id = '"+id+"'";
 					   data.Changeinfo(sdelete,true,function(){
 							var sinsert="insert into wholeinfo (id,name,style,productplace,"+
 				           "price,energy,numbers,updatetime) values ('"+id+"','"+name+"','"+style+
 				           "','"+productplace+"','"+price+"','"+energy+"',"+number+",'"+updatetime+"')"
+			                 // console.log("exec is "+sinsert);
 			                  data.Changeinfo(sinsert,true,function(){
 			                                  response.redirect('/detail/'+id);
 					     });
 				    });
 				});
-			});
 		})
 
 		//添加产品信息
@@ -150,8 +153,19 @@ module.exports = function(app){
 		})
 
 		app.post('/uploadPic',function(request,response){
-			uploadFile(request,function(){
-				
+			uploadFile(request,function(uploadDir,showDir){
+				var imageMagick = gm.subClass({imageMagick:true})
+				imageMagick(uploadDir)
+				 .resize(320,320,'!')
+				 .autoOrient()
+				 .write(uploadDir,function(err){
+				 	if(err){
+				 		console.log(err);
+				 		response.end();
+				 	}
+				 	response.json({success:1,path:showDir});
+				 })
+
 			});
 		})
 
@@ -223,23 +237,25 @@ function uploadFile(req,callback){
 	var fs = require('fs');
     var formidable = require("formidable");
     var form = new formidable.IncomingForm();
+    var name = Date.parse(new Date())/1000;
     form.uploadDir = "./public/";//改变临时目录
     form.parse(req, function(error, fields, files){
         for(var key in files){
             var file = files[key];
             switch (file.type){
                 case "image/jpeg":
-                    fName = "temp.jpg";
+                    fName = name+".jpg";
                     break;
                 case "image/png":
-                    fName = "temp.png";
+                    fName = name+".png";
                     break;
                 default :
-                    fName = "temp.png";
+                    fName = name+".png";
                     break;
             }
-            console.log(file.size);
+            // console.log(file.size);
             var uploadDir = "./public/image/" + fName;
+            var showDir = "/image/" + fName;
             fs.rename(file.path, uploadDir, function(err) {
                 if (err) {
                    console.log(err);
@@ -248,7 +264,7 @@ function uploadFile(req,callback){
                 // res.write("upload image:<br/>");
                 // res.write("<img src='/imgShow?id=" + fName + "' />");
                 // res.end();
-                callback();
+                callback(uploadDir,showDir);
             });
         }
     });

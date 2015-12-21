@@ -70,12 +70,16 @@ DataBase.prototype.selectFromWhole=function(query,num,callback){
                         }
                         exec=exec.substring(0,exec.length-1);
                         exec = exec+");"
-      //                  console.log("执行语句是："+exec);
+                        // console.log("执行语句是："+exec);
                         var good = eval(exec);
                         list[i]=good;       
               }
               doRelease(connection);
-              callback(list);
+              if(num == 1){
+                   callback(result.rows[0][0]); 
+              }else{
+                   callback(list);
+              }
             }); 
         });
 }

@@ -2,11 +2,11 @@ extends ../layout
 block content
 	.container
 		.row
-			form#upPic.from-horizontal(method="post",action="/uploadPic",enctype="multipart/form-data")
+			form#upPic.from-horizontal(method="post",action="#{picaction}",enctype="multipart/form-data")
 				.form-group
 					.row
 						.col-sm-12
-							img#pic.img-responsive.center-block(src="/image/1000000000.jpg")
+							img#pic.img-responsive.center-block(src="#{good.pic}")
 						.row.parent-vertical-center
 							label.col-sm-6.text-right(for="inputfile") 添加照片
 							input#inputfile.col-sm-6(type="file",name="pic")
@@ -56,5 +56,4 @@ block content
 				.form-group
 					.col-sm-12
 						button.btn.btn-success.center-block(type="submit") 提交
-	script(src="/libs/js/AjaxFileUpload.js")
 	script(src="/libs/js/uploadcontrol.js")
