@@ -1,15 +1,14 @@
-extends ../layout
-block content
-	.container
-		.row
-			.col-md-5
-				a(href="/list")
-					img.img-responsive.center-block(src="/image/1.jpg")
-			.col-md-5
-				a(href="/add")
-					img.img-responsive.center-block(src="/image/1.jpg")
-
-        
+doctype
+html(height:"100%")
+	head
+		meta(charset='utf-8')
+		title #{title}
+		include ../includes/head
+		script(src="/libs/js/index.js")
+	body(onload="init();")
+		img.img#background.img-responsive.center-block(src="/image/market.jpg")
+		img.img#list.img-responsive.center-block(src="/image/list.png")
+		img.img#add.img-responsive.center-block(src="/image/add.png")
 
 
 

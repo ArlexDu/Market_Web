@@ -53,7 +53,14 @@ block content
 							.col-sm-9
 								input#inputenergy.form-control(type="text",name="energy",value="#{good.energy}")
 							.col-sm-3
+				.form-group.hidden
+					label.col-sm-3.col-sm-offset-1.text-center.cotrol-label(for="tempdir") 暂存文件名称
+					.col-sm-8
+						.row
+							.col-sm-9
+								input#tempdir.form-control(type="text",name="picdir",value="#{good.pic}")
+							.col-sm-3
 				.form-group
 					.col-sm-12
-						button.btn.btn-success.center-block(type="submit") 提交
+						button#sub.btn.btn-success.center-block(type="submit") 提交
 	script(src="/libs/js/uploadcontrol.js")

@@ -31,6 +31,7 @@ module.exports = function(app){
 		//添加新的商品
 		app.get('/add',function(request,reponse){
 			var action = "/add"
+			var picaction="/uploadPic"
 			reponse.render('add',{
 				title: '添加新的商品',
 				good: {
@@ -40,10 +41,11 @@ module.exports = function(app){
 						energy: '',
 						price: '',
 						time: '',
-						pic: '',
+						pic: '/image/good.jpg',
 						style:''
 					},
-				action
+				action,
+				picaction
 			})
 		})
 
@@ -52,12 +54,13 @@ module.exports = function(app){
 			var id = request.params.id;
 		//	console.log("id is "+id);
 			var data = new DataBase();
-		    var query = "SELECT numbers,price,updatetime,id,name,style,productplace,energy " +
+		    var query = "SELECT numbers,price,updatetime,id,name,picdir,style,productplace,energy " +
 		              "FROM wholeinfo where id = '"+id+"'";
 		    var picaction="/uploadPic"
 		    var action ="/update"
-			data.selectFromWhole(query,8,function(goods){ 
+			data.selectFromWhole(query,9,function(goods){ 
 				 var good = goods[0];
+				 console.log(good.pic);
 			     reponse.render('add',{
 				 title: '更新商品的信息',
 				 good,
@@ -80,11 +83,11 @@ module.exports = function(app){
 		//查看具体销售信息
 		app.get('/detail/:id',function(request,reponse){
 			var id = request.params.id;
-		//	console.log("id is "+id);
+			console.log("id is "+id);
 			var data = new DataBase();
-		    var query = "SELECT numbers,price,updatetime,id,name,style,productplace,energy " +
+		    var query = "SELECT numbers,price,updatetime,id,name,picdir,style,productplace,energy " +
 		              "FROM wholeinfo where id = '"+id+"'";
-			data.selectFromWhole(query,8,function(goods){ 
+			data.selectFromWhole(query,9,function(goods){ 
 				 var good = goods[0];
 				 good.updatetime = getLocalTime(good.updatetime);
 				 var query = "SELECT numbers,price,saletime " +
@@ -113,23 +116,21 @@ module.exports = function(app){
 			var productplace = request.body.productplace;
 			var price = request.body.price;
 			var energy = request.body.energy;
+			var pic = request.body.picdir;
 			var updatetime = Date.parse(new Date())/1000;
 			var data = new DataBase();
 			// console.log("update");
 			var query = "SELECT numbers " +
 			              "FROM wholeinfo where id = '"+id+"'";
+			     //插入前删除已在触发器里面执行
 				data.selectFromWhole(query,1,function(number){ 
-			         // console.log("number is "+number);
-			         var sdelete="delete from wholeinfo where id = '"+id+"'";
-					   data.Changeinfo(sdelete,true,function(){
-							var sinsert="insert into wholeinfo (id,name,style,productplace,"+
-				           "price,energy,numbers,updatetime) values ('"+id+"','"+name+"','"+style+
-				           "','"+productplace+"','"+price+"','"+energy+"',"+number+",'"+updatetime+"')"
-			                 // console.log("exec is "+sinsert);
-			                  data.Changeinfo(sinsert,true,function(){
-			                                  response.redirect('/detail/'+id);
+						var sinsert="insert into wholeinfo (id,name,style,productplace,"+
+			           "price,energy,numbers,updatetime,picdir) values ('"+id+"','"+name+"','"+style+
+			           "','"+productplace+"','"+price+"','"+energy+"',"+number+",'"+updatetime+"','"+pic+"')"
+		                 // console.log("exec is "+sinsert);
+		                  data.Changeinfo(sinsert,true,function(){
+		                                  response.redirect('/detail/'+id);
 					     });
-				    });
 				});
 		})
 
@@ -141,11 +142,12 @@ module.exports = function(app){
 			var productplace = request.body.productplace;
 			var price = request.body.price;
 			var energy = request.body.energy;
+			var pic = request.body.picdir;
 			var updatetime = Date.parse(new Date())/1000;
 			var data = new DataBase();
 			var sinsert="insert into wholeinfo (id,name,style,productplace,"+
-			           "price,energy,numbers,updatetime) values ('"+id+"','"+name+"','"+style+
-			           "','"+productplace+"','"+price+"','"+energy+"',"+0+",'"+updatetime+"')"
+			           "price,energy,numbers,updatetime,picdir) values ('"+id+"','"+name+"','"+style+
+			           "','"+productplace+"','"+price+"','"+energy+"',"+0+",'"+updatetime+"','"+pic+"')"
 			  // console.log("add exec is "+ sinsert);
 		      data.Changeinfo(sinsert,true,function(){
 		                      response.redirect('/list');
@@ -156,7 +158,7 @@ module.exports = function(app){
 			uploadFile(request,function(uploadDir,showDir){
 				var imageMagick = gm.subClass({imageMagick:true})
 				imageMagick(uploadDir)
-				 .resize(320,320,'!')
+				 .resize(150,150,'!')
 				 .autoOrient()
 				 .write(uploadDir,function(err){
 				 	if(err){
@@ -169,14 +171,14 @@ module.exports = function(app){
 			});
 		})
 
-		//Android端获取产品信息
+		//Android端每次登陆都要对比最新服务器的信息从而获取最新的产品信息
 		app.post('/android/updateinfo',function(request,response){
             var updatetime = request.body.updatetime;
              // console.log("updatetime is "+ updatetime);
 			var data = new DataBase();
-		    var query = "SELECT numbers,price,updatetime,id,name " +
+		    var query = "SELECT numbers,price,updatetime,id,name,picdir " +
 		              "FROM wholeinfo where updatetime > "+updatetime;
-			data.selectFromWhole(query,5,function(goods){
+			data.selectFromWhole(query,6,function(goods){
 			     // console.log("good is "+ goods);
 			      response.json(goods);
 			})
@@ -190,6 +192,7 @@ module.exports = function(app){
 			// var info = "[{'id':'1000000000','time':'1231435135','number':'20','price':'23.5'},"+
 			//           "{'id':'1000000001','time':'1231435135','number':'20','price':'23.5'}]"
             var newinfo = eval(info)
+            //关于数据库的级联操作写在detailinfo的insert触发器里面
 			var sinsert = "insert all "
 			for(var i=0;i<newinfo.length;i++){
 				var id = newinfo[i].id
@@ -201,30 +204,31 @@ module.exports = function(app){
 			           "','"+number+"') "
 			}
 			sinsert = sinsert+" select 1 from dual"
-			console.log("exec is "+sinsert);
+			// console.log("exec is "+sinsert);
 		    data.Changeinfo(sinsert,true,function(){
-                    console.json({success:5});
+                    response.json({success:5});
 			 });
  		// 	console.log(request.body.info);
 		})
 
 		//Android端添加产品信息
 		app.post('/android/add',function(request,response){
-			var id = request.body.id;
-			var name = request.body.name;
-			var style = request.body.style;
-			var productplace = request.body.productplace;
-			var price = request.body.price;
-			var energy = request.body.energy;
-			var updatetime = Date.parse(new Date())/1000;
-			var data = new DataBase();
-			var sinsert="insert into wholeinfo (id,name,style,productplace,"+
-			           "price,energy,numbers,updatetime) values ('"+id+"','"+name+"','"+style+
-			           "','"+productplace+"','"+price+"','"+energy+"',"+0+",'"+updatetime+"')"
-			  // console.log("add exec is "+ sinsert);
-		      data.Changeinfo(sinsert,true,function(){
-		                      response.json({success:1});
-			});
+            console.log(request.body);		
+		// 	var id = request.body.id;
+		// 	var name = request.body.name;
+		// 	var style = request.body.style;
+		// 	var productplace = request.body.productplace;
+		// 	var price = request.body.price;
+		// 	var energy = request.body.energy;
+		// 	var updatetime = Date.parse(new Date())/1000;
+		// 	var data = new DataBase();
+		// 	var sinsert="insert into wholeinfo (id,name,style,productplace,"+
+		// 	           "price,energy,numbers,updatetime) values ('"+id+"','"+name+"','"+style+
+		// 	           "','"+productplace+"','"+price+"','"+energy+"',"+0+",'"+updatetime+"')"
+		// 	  // console.log("add exec is "+ sinsert);
+		//       data.Changeinfo(sinsert,true,function(){
+		//                       response.json({success:1});
+		// 	});
 		})
 }
 

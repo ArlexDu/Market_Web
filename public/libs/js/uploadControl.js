@@ -12,7 +12,8 @@ $(document).ready(function (e) {
             processData: false,
         }).done(function(results){
         	if(results.success===1){
-				console.log("success");
+				// console.log("success");
+                $("#tempdir").val(results.path);
 				$('#pic').attr('src',results.path)
 			}
         });
